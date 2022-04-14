@@ -1,0 +1,79 @@
+#include <Servo.h>
+#define SCOOP 5
+#define FORWARD_DRIVE 6
+#define REVERSE_DRIVE 7
+#define DROPOFF_POS 80
+
+#define OFF 99
+#define START 0
+#define PICKUP 1
+#define DRIVE 2
+#define DROP_OFF 3
+#define REVERSE 4
+#define HOME 155
+Servo arm;
+int state = OFF;
+
+void setup()
+{
+
+    arm.attach(2);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+    pinMode(A0, OUTPUT);
+    arm.write(HOME);
+    state = OFF;
+    analogWrite(A0, 255);
+}
+
+void loop()
+{
+
+    // NOTE
+    //  The delay(20) are in place  as a buffer to avoid drwaing too much current
+
+    //  //PICKUP
+    delay(1000);
+    digitalWrite(SCOOP, HIGH);
+    delay(1200);
+    digitalWrite(SCOOP, LOW);
+    delay(1000);
+
+    // DRIVE
+    digitalWrite(REVERSE_DRIVE, LOW);
+    digitalWrite(FORWARD_DRIVE, HIGH);
+    delay(6000);
+    digitalWrite(FORWARD_DRIVE, LOW);
+    delay(1000);
+
+    // TWIST
+    arm.write(DROPOFF_POS);
+
+    // DROPOFF
+    delay(1000);
+    digitalWrite(SCOOP, HIGH);
+    delay(450);
+    digitalWrite(SCOOP, LOW);
+    delay(20);
+    arm.write(HOME);
+    delay(20);
+    // reverse
+    digitalWrite(REVERSE_DRIVE, HIGH);
+    delay(6000);
+    digitalWrite(REVERSE_DRIVE, LOW);
+
+    //  digitalWrite(6, LOW);
+    //  delay(200);
+    //  digitalWrite(7, HIGH);
+    //  delay(1000);
+    //
+    //  digitalWrite(7, LOW);
+    //  delay(200);
+    //  arm.write(180);
+    //  delay(200);
+    //  digitalWrite(5, HIGH);
+    //  delay(1000);
+    //  digitalWrite(5, LOW);
+    //  delay(1000);
+}
