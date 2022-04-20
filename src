@@ -1,8 +1,13 @@
 #include <Servo.h>
+
+#define GREEN_LED 3
+#define RED_LED 8
+#define SCOOP_BACK 4
 #define SCOOP 5
 #define FORWARD_DRIVE 6
 #define REVERSE_DRIVE 7
-#define DROPOFF_POS 80
+#define DROPOFF_POS 75
+#define buzzer 9
 
 #define OFF 99
 #define START 0
@@ -10,7 +15,7 @@
 #define DRIVE 2
 #define DROP_OFF 3
 #define REVERSE 4
-#define HOME 155
+#define HOME 180
 Servo arm;
 int state = OFF;
 
@@ -18,62 +23,111 @@ void setup()
 {
 
     arm.attach(2);
+    pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
-    pinMode(A0, OUTPUT);
+    pinMode(8, OUTPUT);
+    pinMode(9, OUTPUT);
     arm.write(HOME);
     state = OFF;
-    analogWrite(A0, 255);
 }
 
 void loop()
 {
 
-    // NOTE
-    //  The delay(20) are in place  as a buffer to avoid drwaing too much current
+    // int duration = pulseIn(A0, HIGH);
+    // Serial.println(duration);
+    // tone(3, 4000, 5);
 
-    //  //PICKUP
+    // PICKUP
     delay(1000);
+    digitalWrite(RED_LED, HIGH);
+    digitalWrite(SCOOP_BACK, LOW);
     digitalWrite(SCOOP, HIGH);
     delay(1200);
     digitalWrite(SCOOP, LOW);
     delay(1000);
 
-    // DRIVE
     digitalWrite(REVERSE_DRIVE, LOW);
     digitalWrite(FORWARD_DRIVE, HIGH);
-    delay(6000);
+    digitalWrite(GREEN_LED, HIGH);
+    digitalWrite(RED_LED, LOW);
+    delay(5000);
+
     digitalWrite(FORWARD_DRIVE, LOW);
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(RED_LED, HIGH);
     delay(1000);
 
-    // TWIST
-    arm.write(DROPOFF_POS);
-
-    // DROPOFF
+    arm.write(90);
     delay(1000);
-    digitalWrite(SCOOP, HIGH);
-    delay(450);
+    digitalWrite(SCOOP_BACK, HIGH);
+    delay(950);
     digitalWrite(SCOOP, LOW);
-    delay(20);
-    arm.write(HOME);
-    delay(20);
-    // reverse
-    digitalWrite(REVERSE_DRIVE, HIGH);
-    delay(6000);
-    digitalWrite(REVERSE_DRIVE, LOW);
+    digitalWrite(SCOOP_BACK, LOW);
+    delay(1000);
 
-    //  digitalWrite(6, LOW);
-    //  delay(200);
-    //  digitalWrite(7, HIGH);
-    //  delay(1000);
+    arm.write(HOME);
+    delay(1000);
+    // REVERSE
+    // state = REVERSE;
+
+    digitalWrite(REVERSE_DRIVE, HIGH);
+    tone(buzzer, 3000, 500);
+    digitalWrite(RED_LED, LOW);
+    digitalWrite(GREEN_LED, HIGH);
+    delay(1000);
+    tone(buzzer, 3000, 500);
+    delay(1000);
+    tone(buzzer, 3000, 500);
+    delay(1000);
+    tone(buzzer, 3000, 500);
+    delay(1000);
+    tone(buzzer, 3000, 500);
+    delay(1000);
+    tone(buzzer, 3000, 500);
+    digitalWrite(FORWARD_DRIVE, LOW);
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(RED_LED, HIGH);
+    delay(1000);
+
     //
-    //  digitalWrite(7, LOW);
-    //  delay(200);
-    //  arm.write(180);
-    //  delay(200);
-    //  digitalWrite(5, HIGH);
+    //
+    //  arm.write(HOME);
     //  delay(1000);
-    //  digitalWrite(5, LOW);
-    //  delay(1000);
+
+    //
+
+    //
+    //   //TWIST
+    //    arm.write(DROPOFF_POS);
+    //
+    //    //DROPOFF
+    //    delay(1000);
+    //    digitalWrite(SCOOP, HIGH);
+    //    delay(450);
+    //    digitalWrite(SCOOP, LOW);
+    //    delay(20);
+    //    arm.write(HOME);
+    //    delay(20);
+    //   //reverse
+    //   digitalWrite(REVERSE_DRIVE, HIGH);
+    //   delay(6000);
+    //   digitalWrite(REVERSE_DRIVE, LOW);
+    //
+    ////  digitalWrite(6, LOW);
+    ////  delay(200);
+    ////  digitalWrite(7, HIGH);
+    ////  delay(1000);
+    ////
+    ////  digitalWrite(7, LOW);
+    ////  delay(200);
+    ////  arm.write(180);
+    ////  delay(200);
+    ////  digitalWrite(5, HIGH);
+    ////  delay(1000);
+    ////  digitalWrite(5, LOW);
+    ////  delay(1000);
 }
